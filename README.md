@@ -26,7 +26,7 @@ infusion-test-project/
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/jaydeepparmar2244/brands-by-infusion.git
 cd infusion-test-project
 ```
 

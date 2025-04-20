@@ -6,11 +6,42 @@ const ContactForm = () => {
     email: '',
     plan: 'monthly'
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Add your form submission logic here
+    setIsSubmitting(true);
+    setSubmitStatus({ type: '', message: '' });
+
+    try {
+      const response = await fetch('http://localhost:5000/api/contact/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to submit form');
+      }
+
+      setSubmitStatus({ 
+        type: 'success', 
+        message: 'Form submitted successfully! We will contact you soon.' 
+      });
+      setFormData({ name: '', email: '', plan: 'monthly' });
+    } catch (error) {
+      setSubmitStatus({ 
+        type: 'error', 
+        message: error.message || 'An error occurred while submitting the form. Please try again.' 
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -23,7 +54,6 @@ const ContactForm = () => {
 
   return (
     <section id="contact" className="section-padding bg-primary-50 relative overflow-hidden">
-      {/* Decorative elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute -right-20 -top-20 w-72 h-72 bg-primary-400 rounded-full"></div>
         <div className="absolute -left-20 -bottom-20 w-72 h-72 bg-primary-400 rounded-full"></div>
@@ -92,13 +122,25 @@ const ContactForm = () => {
                 </div>
               </div>
 
-              {/* Centered, smaller submit button */}
+              {submitStatus.message && (
+                <div className={`mt-4 p-4 rounded-lg ${
+                  submitStatus.type === 'success' 
+                    ? 'bg-green-50 text-green-800' 
+                    : 'bg-red-50 text-red-800'
+                }`}>
+                  {submitStatus.message}
+                </div>
+              )}
+
               <div className="mt-8 flex justify-center">
                 <button
                   type="submit"
-                  className="px-8 py-3 btn-primary text-sm font-medium rounded-lg hover:scale-105 transition-transform duration-300"
+                  disabled={isSubmitting}
+                  className={`px-8 py-3 btn-primary text-sm font-medium rounded-lg hover:scale-105 transition-transform duration-300 ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  Submit
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
               </div>
             </div>
