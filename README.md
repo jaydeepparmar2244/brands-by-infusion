@@ -42,13 +42,33 @@ cd ../infusion-test-project-fe
 npm install
 ```
 
-### 4. Environment Configuration
+## Environment Configuration
 
-#### Backend (.env)
-Create a `.env` file in the backend directory:
+### Frontend Environment Variables
+
+#### Development (.env)
+```env
+VITE_API_URL=http://localhost:5000
+VITE_API_URL_PROD=https://brands-by-infusion-be.onrender.com
+```
+
+#### Production (.env.production)
+```env
+VITE_API_URL=https://brands-by-infusion-be.onrender.com
+```
+
+### Backend Environment Variables
+
+#### Development (.env)
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/infusion-db
+```
+
+#### Production (.env)
+```env
+PORT=5000
+MONGODB_URI=<your-production-mongodb-uri>
 ```
 
 ## Running the Application
@@ -135,6 +155,18 @@ The production build will be created in the `dist` directory.
 cd backend
 npm start
 ```
+
+## Environment Variables
+
+### Frontend
+- `VITE_API_URL`: API base URL for development
+- `VITE_API_URL_PROD`: API base URL for production
+
+### Backend
+- `PORT`: Server port (default: 5000)
+- `MONGODB_URI`: MongoDB connection string
+  - Development: `mongodb://localhost:27017/infusion-db`
+  - Production: Your production MongoDB URI
 
 ## Contributing
 
